@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <set>
 #include <cctype>
 
 int main() {
@@ -9,19 +10,27 @@ int main() {
     if (!in) return 1;
 
     std::map<std::string, int> freq;
+    std::map<std::string, std::set<int>> lines;
     std::string line, word;
+    int line_no = 0;
 
     while (std::getline(in, line)) {
+        line_no++;
         word.clear();
         for (char c : line) {
             if (std::isalnum(static_cast<unsigned char>(c))) {
                 word += std::tolower(static_cast<unsigned char>(c));
             } else if (!word.empty()) {
                 freq[word]++;
+                lines[word].insert(line_no);
                 word.clear();
             }
         }
-        if (!word.empty()) freq[word]++;
+        if (!word.empty()) {
+            freq[word]++;
+            lines[word].insert(line_no);
+        }
     }
     return 0;
 }
+
