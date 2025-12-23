@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <regex>
 #include <cctype>
 
 int main() {
@@ -11,11 +12,20 @@ int main() {
 
     std::map<std::string, int> freq;
     std::map<std::string, std::set<int>> lines;
+    std::set<std::string> urls;
+    std::regex url_rx(R"((https?:\/\/[^\s]+)|(www\.[^\s]+)|(\b[a-zA-Z0-9-]+\.[a-zA-Z]{2,}\b))");
+
     std::string line, word;
     int line_no = 0;
 
     while (std::getline(in, line)) {
         line_no++;
+
+        for (std::sregex_iterator it(line.begin(), line.end(), url_rx);
+             it != std::sregex_iterator(); ++it) {
+            urls.insert(it->str());
+        }
+
         word.clear();
         for (char c : line) {
             if (std::isalnum(static_cast<unsigned char>(c))) {
@@ -33,4 +43,3 @@ int main() {
     }
     return 0;
 }
-
