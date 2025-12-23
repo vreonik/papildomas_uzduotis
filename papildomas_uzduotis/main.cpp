@@ -10,6 +10,9 @@ int main() {
     std::ifstream in("tekstas.txt");
     if (!in) return 1;
 
+    std::ofstream out("rezultatai.txt");
+    if (!out) return 1;
+
     std::map<std::string, int> freq;
     std::map<std::string, std::set<int>> lines;
     std::set<std::string> urls;
@@ -41,5 +44,22 @@ int main() {
             lines[word].insert(line_no);
         }
     }
+
+    for (const auto& [w, c] : freq) {
+        if (c > 1) {
+            out << w << " : " << c << "\nEilutes: ";
+            bool first = true;
+            for (int ln : lines[w]) {
+                if (!first) out << ", ";
+                out << ln;
+                first = false;
+            }
+            out << "\n\n";
+        }
+    }
+
+    out << "=== Rasti URL'ai ===\n";
+    for (const auto& u : urls) out << u << "\n";
+
     return 0;
 }
